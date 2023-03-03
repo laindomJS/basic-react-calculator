@@ -4,14 +4,28 @@ export const CalculatorCtx = createContext(null);
 
 export const CalculatorContextProvider = ({ children }) => {
   
-  const [numbers, setNumbers] = useState('');
+  const [display, setDisplay] = useState('');
 
-  const handleNumbers = (value) => {
-    setNumbers(numbers + value);
+  const handleEqual = (value) => {
+    if (value === '=') {
+      const result = eval(display);
+      setDisplay(result);
+    }
+  }
+
+  const handleInput = (value) => {
+    if (value !== '=' && value !== 'Clear') {
+      setDisplay(display + value);
+    }
+  }
+
+  const handleDisplay = (value) => {
+    handleInput(value);
+    handleEqual(value);
   }
 
   return (
-    <CalculatorCtx.Provider value={{ numbers, handleNumbers }}>
+    <CalculatorCtx.Provider value={{ display, handleDisplay}}>
       {children}
     </CalculatorCtx.Provider>
   )
