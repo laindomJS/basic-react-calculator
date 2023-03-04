@@ -28,7 +28,7 @@ export const keys = [
     value: '6',
   },
   {
-    type: 'number',
+    type: 'operator',
     value: '+',
   },
   {
@@ -52,7 +52,7 @@ export const keys = [
     value: '*',
   },
   {
-    type: 'operator',
+    type: 'number',
     value: '0',
   },
   {
