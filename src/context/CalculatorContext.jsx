@@ -86,4 +86,4 @@ export const CalculatorContextProvider = ({ children }) => {
 			{children}
 		</CalculatorCtx.Provider>
 	)
-};ç
+};
