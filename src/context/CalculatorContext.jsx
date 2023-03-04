@@ -3,30 +3,87 @@ import { createContext, useState } from 'react';
 export const CalculatorCtx = createContext(null);
 
 export const CalculatorContextProvider = ({ children }) => {
-  
-  const [display, setDisplay] = useState('');
+	const [memory, setMemory] = useState(0);
+	const [currentValue, setCurrentValue] = useState(0);
+	const [operation, setOperation] = useState(null);
+	const [isReset, setIsReset] = useState(true);
 
-  const handleEqual = (value) => {
-    if (value === '=') {
-      const result = eval(display);
-      setDisplay(result);
-    }
-  }
+	const addNumber = (value) => {
+		if (isReset) {
+			setCurrentValue(value);
+			setIsReset(false);
+		} else {
+			const newValue = currentValue.toString() + value;
+			setCurrentValue(newValue);
+		}
+	}
 
-  const handleInput = (value) => {
-    if (value !== '=' && value !== 'Clear') {
-      setDisplay(display + value);
-    }
-  }
+	const handleOperation = (oper) => {
+		if (currentValue) {
+			if (operation) {
+				getResult();
+				setIsReset(true);
+				setOperation(oper);
+			} else {
+				setOperation(oper);
+				setMemory(currentValue);
+				setCurrentValue(0);
+				setIsReset(true);
+			}
+		}
+	}
 
-  const handleDisplay = (value) => {
-    handleInput(value);
-    handleEqual(value);
-  }
+	const clean = () => {
+		setCurrentValue(0);
+		setOperation(null);
+		setMemory(0);
+		setIsReset(true);
+	}
 
-  return (
-    <CalculatorCtx.Provider value={{ display, handleDisplay}}>
-      {children}
-    </CalculatorCtx.Provider>
-  )
-}
+	const getResult = () => {
+		let result;
+
+		if (operation === '+')
+			result = parseFloat(memory) + parseFloat(currentValue);
+		if (operation === '-')
+			result = parseFloat(memory) - parseFloat(currentValue);
+		if (operation === '*')
+			result = parseFloat(memory) * parseFloat(currentValue);
+		if (operation === '/')
+			result = parseFloat(memory) / parseFloat(currentValue);
+
+		setCurrentValue(result);
+	}
+
+	const handleAction = (action) => {
+		if (action === '=') {
+			getResult();
+		}
+
+		if (action === 'Clear') {
+			clean();
+		}
+	}
+
+	const handleClick = (type, value) => {
+		switch (type) {
+			case 'number':
+				addNumber(parseInt(value));
+				break;
+
+			case 'operator':
+				handleOperation(value);
+				break;
+
+			case 'action':
+				handleAction(value);
+				break;
+		}
+	}
+
+	return (
+		<CalculatorCtx.Provider value={{ currentValue, handleClick }}>
+			{children}
+		</CalculatorCtx.Provider>
+	)
+};ç
