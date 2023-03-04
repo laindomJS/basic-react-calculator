@@ -13,7 +13,7 @@ export const CalculatorContextProvider = ({ children }) => {
 			setCurrentValue(value);
 			setIsReset(false);
 		} else {
-			const newValue = currentValue.toString() + value;
+			const newValue = currentValue + value;
 			setCurrentValue(newValue);
 		}
 	}
@@ -43,17 +43,24 @@ export const CalculatorContextProvider = ({ children }) => {
 	const getResult = () => {
 		let result;
 
-		if (operation === '+')
-			result = parseFloat(memory) + parseFloat(currentValue);
-		if (operation === '-')
-			result = parseFloat(memory) - parseFloat(currentValue);
-		if (operation === '*')
-			result = parseFloat(memory) * parseFloat(currentValue);
-		if (operation === '/')
-			result = parseFloat(memory) / parseFloat(currentValue);
+		if (currentValue && operation && memory) {
+			if (operation === '+')
+				result = parseFloat(memory) + parseFloat(currentValue);
+			if (operation === '-')
+				result = parseFloat(memory) - parseFloat(currentValue);
+			if (operation === '*')
+				result = parseFloat(memory) * parseFloat(currentValue);
+			if (operation === '/')
+				result = parseFloat(memory) / parseFloat(currentValue);
+		} else {
+      return;
+    }
 
 		setCurrentValue(result);
-	}
+    setOperation(null);
+    setMemory(result);
+    setIsReset(true);
+  }
 
 	const handleAction = (action) => {
 		if (action === '=') {
@@ -68,7 +75,7 @@ export const CalculatorContextProvider = ({ children }) => {
 	const handleClick = (type, value) => {
 		switch (type) {
 			case 'number':
-				addNumber(parseInt(value));
+				addNumber(value);
 				break;
 
 			case 'operator':
@@ -86,4 +93,4 @@ export const CalculatorContextProvider = ({ children }) => {
 			{children}
 		</CalculatorCtx.Provider>
 	)
-};
+}
