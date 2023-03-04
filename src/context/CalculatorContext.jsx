@@ -1,6 +1,11 @@
 import { createContext, useState } from 'react';
 
-export const CalculatorCtx = createContext(null);
+const initialState = {
+	currentValue: 0,
+	handleClick: () => {},
+}
+
+export const CalculatorCtx = createContext(initialState);
 
 export const CalculatorContextProvider = ({ children }) => {
 	const [memory, setMemory] = useState(0);
@@ -67,7 +72,7 @@ export const CalculatorContextProvider = ({ children }) => {
 			getResult();
 		}
 
-		if (action === 'Clear') {
+		if (action === 'AC') {
 			clean();
 		}
 	}
